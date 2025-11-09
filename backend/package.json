@@ -1,7 +1,7 @@
 {
   "name": "@dan/backend",
   "version": "0.1.0",
-  "description": "DAN Backend - Firebase Cloud Functions",
+  "description": "Branch Backend - Firebase Cloud Functions",
   "private": true,
   "scripts": {
     "serve": "firebase emulators:start",
@@ -12,18 +12,27 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@dan/shared": "*",
+    "@branch/shared": "file:../shared",
+    "cors": "^2.8.5",
+    "date-fns": "^3.6.0",
+    "express": "^4.19.0",
     "firebase-admin": "^12.1.0",
     "firebase-functions": "^5.0.0",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
     "openai": "^4.38.0",
-    "express": "^4.19.0",
-    "cors": "^2.8.5"
+    "uuid": "^9.0.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
     "@types/cors": "^2.8.17",
-    "typescript": "^5.3.3",
-    "firebase-functions-test": "^3.1.0"
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/morgan": "^1.9.9",
+    "@types/uuid": "^9.0.7",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": "18"

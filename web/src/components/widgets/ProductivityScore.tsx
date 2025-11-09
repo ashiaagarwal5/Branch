@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Target, TrendingUp, TrendingDown } from 'lucide-react';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';

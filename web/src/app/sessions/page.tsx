@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/navbar"
 import { Clock, Calendar, Filter } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 
 const allSessions = [
   { id: 1, subject: "Mathematics", date: "Today", time: "2:30 PM", duration: "45 min", status: "completed" },

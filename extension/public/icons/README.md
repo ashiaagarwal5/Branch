@@ -12,7 +12,7 @@ These placeholder files need to be replaced with actual PNG icons.
 ## Design Guidelines
 
 ### Brand Identity
-- Use DAN brand colors (navy blue + amber/orange gradient)
+- Use Branch brand colors (navy blue + amber/orange gradient)
 - Keep it simple and recognizable at small sizes
 - Consider using a stylized "D" or book/study icon
 

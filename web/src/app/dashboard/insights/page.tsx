@@ -2,7 +2,7 @@
 
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
-import type { AIInsight, WeeklySummary } from '@dan/shared';
+import type { AIInsight, WeeklySummary } from '@branch/shared';
 import { Navbar } from '@/components/navbar';
 import { Sun, BookOpen, Target, BarChart3 } from 'lucide-react';
 

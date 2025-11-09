@@ -8,7 +8,14 @@
     "strict": true,
     "target": "ES2020",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "paths": {
+      "@branch/shared": ["../shared/dist"],
+      "@branch/shared/*": ["../shared/dist/*"]
+    }
   },
   "compileOnSave": true,
   "include": [

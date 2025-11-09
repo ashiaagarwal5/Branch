@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UserPlus, Users, Search, Check, X } from 'lucide-react';
@@ -11,7 +11,7 @@ import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import toast from 'react-hot-toast';
-import type { User } from '@dan/shared';
+import type { User } from '@branch/shared';
 
 const functions = getFunctions();
 
@@ -27,7 +27,7 @@ interface FriendRequestUser {
 export function FriendManager() {
   const { user } = useAuthContext();
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [searchResults, setSearchResults] = useState<FriendRequestUser[]>([]);
   const [searching, setSearching] = useState(false);
   const [incomingRequests, setIncomingRequests] = useState<FriendRequestUser[]>([]);
   const [outgoingRequests, setOutgoingRequests] = useState<FriendRequestUser[]>([]);
@@ -42,14 +42,14 @@ export function FriendManager() {
   const loadFriendsAndRequests = async () => {
     if (!user) return;
 
-    try {
-      const userDoc = await getDoc(doc(db, 'users', user.id));
-      const userData = userDoc.data() as User;
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.id));
+        const userData = userDoc.data() as any;
 
-      // Load incoming requests
-      if (userData.friendRequests?.incoming?.length > 0) {
+      const incomingIds: string[] = userData.friendRequests?.incoming ?? [];
+      if (incomingIds.length > 0) {
         const incomingUsers = await Promise.all(
-          userData.friendRequests.incoming.map(async (userId) => {
+          incomingIds.map(async (userId: string) => {
             const userDoc = await getDoc(doc(db, 'users', userId));
             return { id: userDoc.id, ...userDoc.data() } as FriendRequestUser;
           })
@@ -57,10 +57,10 @@ export function FriendManager() {
         setIncomingRequests(incomingUsers);
       }
 
-      // Load outgoing requests
-      if (userData.friendRequests?.outgoing?.length > 0) {
+      const outgoingIds: string[] = userData.friendRequests?.outgoing ?? [];
+      if (outgoingIds.length > 0) {
         const outgoingUsers = await Promise.all(
-          userData.friendRequests.outgoing.map(async (userId) => {
+          outgoingIds.map(async (userId: string) => {
             const userDoc = await getDoc(doc(db, 'users', userId));
             return { id: userDoc.id, ...userDoc.data() } as FriendRequestUser;
           })
@@ -68,10 +68,10 @@ export function FriendManager() {
         setOutgoingRequests(outgoingUsers);
       }
 
-      // Load friends
-      if (userData.friends?.length > 0) {
+      const friendIds: string[] = userData.friends ?? [];
+      if (friendIds.length > 0) {
         const friendUsers = await Promise.all(
-          userData.friends.map(async (userId) => {
+          friendIds.map(async (userId: string) => {
             const userDoc = await getDoc(doc(db, 'users', userId));
             return { id: userDoc.id, ...userDoc.data() } as FriendRequestUser;
           })
@@ -108,8 +108,8 @@ export function FriendManager() {
       }
 
       const querySnapshot = await getDocs(q);
-      const results = querySnapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() } as User))
+        const results = querySnapshot.docs
+          .map(doc => ({ id: doc.id, ...doc.data() } as FriendRequestUser))
         .filter(u => u.id !== user?.id); // Exclude current user
 
       setSearchResults(results);

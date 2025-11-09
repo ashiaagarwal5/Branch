@@ -2,7 +2,7 @@
 
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useState } from 'react';
-import type { Todo } from '@dan/shared';
+import type { Todo } from '@branch/shared';
 import { Navbar } from '@/components/navbar';
 import { Clock } from 'lucide-react';
 

@@ -3,7 +3,7 @@
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/navbar';
 import { useState } from 'react';
-import { formatDuration, getRelativeTime, formatDate } from '@dan/shared';
+import { formatDuration, getRelativeTime, formatDate } from '@branch/shared';
 
 export default function SessionsPage() {
   const { user } = useAuthContext();

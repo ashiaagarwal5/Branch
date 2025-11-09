@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "DAN - Study Tracker",
+  "name": "Branch - Study Tracker",
   "version": "0.1.0",
-  "description": "Automatic study session tracking for DAN",
+  "description": "Automatic study session tracking for Branch",
   "permissions": [
     "tabs",
     "activeTab",

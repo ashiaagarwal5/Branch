@@ -1,10 +1,10 @@
-# DAN - Strava for Studying
+# Branch - Strava for Studying
 
 **Track, gamify, and share your focus.**
 
 ## Overview
 
-DAN is a gamified productivity tracker that measures and improves how people study — combining Strava's social model with AI insights and a browser extension for passive tracking.
+Branch is a gamified productivity tracker that measures and improves how people study — combining Strava's social model with AI insights and a browser extension for passive tracking.
 
 ## Team
 
@@ -16,7 +16,7 @@ DAN is a gamified productivity tracker that measures and improves how people stu
 ## Architecture
 
 ```
-dan/
+branch/
 ├── web/              # Next.js web application
 ├── extension/        # Chrome browser extension
 ├── backend/          # Firebase Cloud Functions
@@ -45,7 +45,7 @@ dan/
 1. Clone the repository
 ```bash
 git clone <repo-url>
-cd DAN
+cd Branch
 ```
 
 2. Install dependencies

@@ -1,7 +1,8 @@
-import { STUDY_DOMAINS, DISTRACTION_DOMAINS, IDLE_THRESHOLD_SECONDS, TRACKING_INTERVAL_SECONDS } from '@dan/shared';
+import { STUDY_DOMAINS, DISTRACTION_DOMAINS, IDLE_THRESHOLD_SECONDS, TRACKING_INTERVAL_SECONDS } from '@branch/shared';
 import { SessionTracker } from './sessionTracker';
+import { getAccessToken, getStoredAuth, linkExtension, logoutExtension } from './auth';
 
-console.log('DAN Extension: Background service worker initialized');
+console.log('Branch Extension: Background service worker initialized');
 
 const sessionTracker = new SessionTracker();
 
@@ -39,16 +40,41 @@ setInterval(() => {
 
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'GET_SESSION_STATUS') {
-    sendResponse(sessionTracker.getSessionStatus());
-  } else if (message.type === 'START_MANUAL_SESSION') {
-    sessionTracker.startManualSession(message.topic);
-    sendResponse({ success: true });
-  } else if (message.type === 'STOP_SESSION') {
-    sessionTracker.stopSession();
-    sendResponse({ success: true });
-  }
-  return true; // Keep message channel open for async response
+  (async () => {
+    switch (message.type) {
+      case 'GET_SESSION_STATUS':
+        sendResponse(sessionTracker.getSessionStatus());
+        break;
+      case 'START_MANUAL_SESSION':
+        sessionTracker.startManualSession(message.topic);
+        sendResponse({ success: true });
+        break;
+      case 'STOP_SESSION':
+        await sessionTracker.stopSession();
+        sendResponse({ success: true });
+        break;
+      case 'LINK_EXTENSION':
+        try {
+          const auth = await linkExtension(message.code, message.deviceName);
+          sendResponse({ success: true, auth });
+        } catch (error: any) {
+          sendResponse({ success: false, error: error?.message || 'Failed to link extension' });
+        }
+        break;
+      case 'GET_AUTH_STATUS': {
+        const auth = await getStoredAuth();
+        sendResponse({ success: true, auth });
+        break;
+      }
+      case 'LOGOUT_EXTENSION':
+        await logoutExtension();
+        sendResponse({ success: true });
+        break;
+      default:
+        sendResponse({ success: false, error: 'unknown_message' });
+    }
+  })();
+  return true;
 });
 
 // Check for study domains on startup

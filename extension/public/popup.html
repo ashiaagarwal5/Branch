@@ -3,13 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DAN Study Tracker</title>
+  <title>Branch Study Tracker</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="popup-container">
-    <div class="header">
-      <h1>DAN</h1>
+      <div class="auth-section">
+        <div class="auth-status">
+          <span id="authStatus" class="status-inactive">Not linked</span>
+        </div>
+        <div id="linkForm" class="link-form">
+          <input
+            type="text"
+            id="setupCodeInput"
+            placeholder="Enter setup code"
+            maxlength="32"
+          />
+          <button id="linkBtn" class="btn btn-primary">Link Extension</button>
+        </div>
+        <div id="linkedInfo" class="linked-info" style="display: none;">
+          <span id="linkedUser"></span>
+          <button id="unlinkBtn" class="btn btn-secondary">Unlink</button>
+        </div>
+      </div>
+
+      <div class="header">
+        <h1>Branch</h1>
       <p class="tagline">Strava for Studying</p>
     </div>
 

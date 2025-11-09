@@ -4,7 +4,7 @@
 // - Extracting page content for AI summaries
 // - Monitoring user interaction patterns
 
-console.log('DAN Extension: Content script loaded');
+console.log('Branch Extension: Content script loaded');
 
 // Listen for messages from background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

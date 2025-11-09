@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { formatDuration, getRelativeTime } from '@dan/shared';
-import type { StudySession } from '@dan/shared';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { apiRequest } from '@/lib/api';
+import { formatDuration, getRelativeTime } from '@branch/shared';
+import type { StudySession } from '@branch/shared';
 
 interface RecentSessionsProps {
   userId: string;
@@ -10,11 +12,62 @@ interface RecentSessionsProps {
 
 export default function RecentSessions({ userId }: RecentSessionsProps) {
   const [sessions, setSessions] = useState<StudySession[]>([]);
+  const { accessToken } = useAuthContext();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch recent sessions from Firestore
-    // Placeholder for now
-  }, [userId]);
+    let cancelled = false;
+
+    async function loadSessions() {
+      if (!accessToken || !userId) return;
+      setLoading(true);
+      try {
+        const result = await apiRequest<{ sessions: any[] }>(
+          `/api/sessions?limit=5`,
+          {
+            accessToken,
+            method: 'GET',
+          }
+        );
+        if (!cancelled) {
+          const normalized =
+            result.sessions?.map((session) => ({
+              ...session,
+              startTime: session.startTime
+                ? new Date(session.startTime)
+                : new Date(),
+              focusScore: session.focusScore ?? 0,
+            })) ?? [];
+          setSessions(normalized);
+        }
+      } catch (error) {
+        console.error('Failed to load sessions', error);
+        if (!cancelled) {
+          setSessions([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadSessions();
+    return () => {
+      cancelled = true;
+    };
+  }, [userId, accessToken]);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl shadow-md p-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Sessions</h3>
+        <div className="text-center py-8 text-gray-500 text-sm">
+          Loading your latest sessions...
+        </div>
+      </div>
+    );
+  }
 
   if (sessions.length === 0) {
     return (

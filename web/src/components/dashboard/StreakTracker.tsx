@@ -1,6 +1,6 @@
 'use client';
 
-import { User } from '@dan/shared';
+import { User } from '@branch/shared';
 
 interface StreakTrackerProps {
   user: User;

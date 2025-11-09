@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BADGES } from '@dan/shared';
+import { BADGES } from '@branch/shared';
 
 interface BadgeShowcaseProps {
   userId: string;

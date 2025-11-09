@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getRelativeTime, formatDuration } from '@dan/shared';
-import type { FriendActivity } from '@dan/shared';
+import { getRelativeTime, formatDuration } from '@branch/shared';
+import type { FriendActivity } from '@branch/shared';
 
 interface FriendFeedProps {
   userId: string;

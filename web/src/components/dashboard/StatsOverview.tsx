@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { formatDuration } from '@dan/shared';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { apiRequest } from '@/lib/api';
 
 interface StatsOverviewProps {
   userId: string;
@@ -21,17 +22,57 @@ export default function StatsOverview({ userId }: StatsOverviewProps) {
     averageFocusScore: 0,
     weeklyHours: 0,
   });
+  const { accessToken } = useAuthContext();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch stats from Firestore
-    // Placeholder for now
-    setStats({
-      totalHours: 42.5,
-      totalSessions: 87,
-      averageFocusScore: 0.85,
-      weeklyHours: 8.3,
-    });
-  }, [userId]);
+    let cancelled = false;
+
+    async function loadStats() {
+      if (!accessToken || !userId) return;
+      setLoading(true);
+      try {
+        const profile = await apiRequest<{
+          user?: any;
+          stats?: any;
+        }>('/api/users/me', {
+          accessToken,
+          method: 'GET',
+        });
+
+        if (!cancelled) {
+          const statsDoc = profile.stats || {};
+          setStats({
+            totalHours: statsDoc.totalHours ?? (profile.user?.totalStudyTime ?? 0) / 60,
+            totalSessions: statsDoc.totalSessions ?? profile.user?.totalSessions ?? 0,
+            averageFocusScore: statsDoc.averageFocusScore ?? 0,
+            weeklyHours:
+              statsDoc.weeklyHours ??
+              (statsDoc.recentWeekMinutes ?? 0) / 60,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load stats', error);
+        if (!cancelled) {
+          setStats({
+            totalHours: 0,
+            totalSessions: 0,
+            averageFocusScore: 0,
+            weeklyHours: 0,
+          });
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadStats();
+    return () => {
+      cancelled = true;
+    };
+  }, [userId, accessToken]);
 
   const statCards = [
     {
@@ -59,6 +100,14 @@ export default function StatsOverview({ userId }: StatsOverviewProps) {
       color: 'from-amber-500 to-orange-500',
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl shadow-md p-6 text-sm text-gray-500">
+        Loading your study stats...
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

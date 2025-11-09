@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/navbar"
 import { User, Mail, Calendar, Award } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 
 const achievements = [
   { title: "7 Day Streak", description: "Studied for 7 consecutive days", earned: true },

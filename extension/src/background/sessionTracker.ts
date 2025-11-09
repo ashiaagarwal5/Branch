@@ -1,12 +1,17 @@
-import { 
-  STUDY_DOMAINS, 
-  DISTRACTION_DOMAINS, 
+import {
+  STUDY_DOMAINS,
+  DISTRACTION_DOMAINS,
   MIN_SESSION_DURATION_SECONDS,
   extractDomain,
   isStudyDomain,
   calculateFocusScore,
   calculateXP
-} from '@dan/shared';
+} from '@branch/shared';
+import { getAccessToken } from './auth';
+
+const API_BASE =
+  process.env.BRANCH_API_BASE_URL ||
+  'http://localhost:5001/dann-91ae4/us-central1/api';
 
 interface SessionData {
   startTime: number;
@@ -169,29 +174,26 @@ export class SessionTracker {
 
     const now = Date.now();
     const duration = (now - this.currentSession.startTime) / 1000;
-    const totalTime = this.currentSession.activeTime + this.currentSession.idleTime;
+    const totalTime =
+      this.currentSession.activeTime + this.currentSession.idleTime;
 
-    // Calculate focus score
     const focusScore = calculateFocusScore(
       this.currentSession.activeTime,
       Math.max(totalTime, duration),
       this.currentSession.tabSwitches
     );
 
-    // Calculate XP
     const durationMinutes = duration / 60;
     const xpEarned = calculateXP(durationMinutes, focusScore);
 
-    // Get user ID from storage
-    const { userId } = await chrome.storage.local.get('userId');
-    if (!userId) {
-      console.error('No user ID found in storage');
+    const authState = await getAccessToken();
+    if (!authState) {
+      console.error('Extension not linked to a Branch account');
       return;
     }
 
-    // Prepare session data
     const sessionData = {
-      userId,
+      userId: authState.userId,
       startTime: new Date(this.currentSession.startTime).toISOString(),
       endTime: new Date(now).toISOString(),
       duration: Math.round(duration),
@@ -206,13 +208,12 @@ export class SessionTracker {
       platform: 'chrome-extension',
     };
 
-    // Send to backend
     try {
-      const backendUrl = 'http://localhost:5001/dann-91ae4/us-central1/api';
-      const response = await fetch(`${backendUrl}/sessions`, {
+      const response = await fetch(`${API_BASE}/logs/activity`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${authState.accessToken}`,
         },
         body: JSON.stringify(sessionData),
       });
@@ -224,7 +225,6 @@ export class SessionTracker {
       console.log('Session saved successfully');
     } catch (error) {
       console.error('Error saving session:', error);
-      // Store for retry later
       await this.storeForRetry(sessionData);
     }
   }

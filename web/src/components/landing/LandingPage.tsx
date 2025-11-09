@@ -4,7 +4,7 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { Trophy, Zap, Flame, Target, TrendingUp, Users, Sparkles, LogIn, UserPlus } from 'lucide-react';
 import { BranchLogo } from './BranchLogo';
 import { TreeCharacter } from './TreeCharacter';

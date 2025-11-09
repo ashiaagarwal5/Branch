@@ -33,29 +33,42 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleCreateSession = handleCreateSession;
-const admin = __importStar(require("firebase-admin"));
-async function handleCreateSession(req, res) {
+exports.env = void 0;
+const functions = __importStar(require("firebase-functions"));
+const runtimeConfig = (() => {
     try {
-        const sessionData = req.body;
-        // Validate required fields
-        if (!sessionData.userId || !sessionData.startTime || !sessionData.duration) {
-            return res.status(400).json({ error: 'Missing required fields' });
-        }
-        // Create session document
-        const sessionRef = await admin.firestore().collection('sessions').add({
-            ...sessionData,
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
-        res.status(201).json({
-            success: true,
-            sessionId: sessionRef.id,
-        });
+        return (functions.config() || {});
     }
-    catch (error) {
-        console.error('Error creating session:', error);
-        res.status(500).json({ error: 'Failed to create session' });
+    catch {
+        return {};
     }
-}
-//# sourceMappingURL=sessions.js.map
+})();
+const env = {
+    projectId: process.env.GCLOUD_PROJECT ||
+        process.env.PROJECT_ID ||
+        runtimeConfig?.project?.id ||
+        '',
+    jwtSecret: process.env.JWT_SECRET ||
+        runtimeConfig.app?.jwt_secret ||
+        'insecure-development-secret',
+    refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET ||
+        runtimeConfig.app?.refresh_secret ||
+        'insecure-development-refresh-secret',
+    accessTokenTtlSeconds: Number(process.env.ACCESS_TOKEN_TTL_SECONDS ||
+        runtimeConfig.app?.access_token_ttl_seconds ||
+        3600),
+    extensionAccessTokenTtlSeconds: Number(process.env.EXTENSION_ACCESS_TOKEN_TTL_SECONDS ||
+        runtimeConfig.app?.extension_access_ttl_seconds ||
+        900),
+    refreshTokenTtlDays: Number(process.env.REFRESH_TOKEN_TTL_DAYS ||
+        runtimeConfig.app?.refresh_token_ttl_days ||
+        7),
+    classificationServiceUrl: process.env.CLASSIFICATION_SERVICE_URL ||
+        runtimeConfig.services?.classification_url ||
+        '',
+    imageGenerationServiceUrl: process.env.IMAGE_GENERATION_SERVICE_URL ||
+        runtimeConfig.services?.image_generation_url ||
+        '',
+};
+exports.env = env;
+//# sourceMappingURL=env.js.map

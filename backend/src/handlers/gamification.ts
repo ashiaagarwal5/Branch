@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import { BADGES, calculateLevel } from '@dan/shared';
+import { BADGES, calculateLevel } from '@branch/shared';
 
 export async function checkAndAwardBadges(userId: string) {
   try {
