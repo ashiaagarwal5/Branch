@@ -1,6 +1,6 @@
-# DAN - Setup Guide
+# Branch - Setup Guide
 
-This guide will help you get the DAN productivity tracker up and running.
+This guide will help you get the Branch productivity tracker up and running.
 
 ## Prerequisites
 
