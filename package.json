@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "dev:web": "cd web && npm run dev",
+    "vercel-build": "npm install --legacy-peer-deps && npm run build",
     "dev:backend": "cd backend && npm run serve",
     "build:web": "cd web && npm run build",
     "build:extension": "cd extension && npm run build",
