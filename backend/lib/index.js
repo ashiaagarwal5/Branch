@@ -32,90 +32,44 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeFriend = exports.addFriend = exports.generateWeeklySummaries = exports.updateLeaderboardsDaily = exports.onSessionCreate = exports.api = void 0;
 const functions = __importStar(require("firebase-functions"));
-const admin = __importStar(require("firebase-admin"));
-const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
-// Initialize Firebase Admin
-admin.initializeApp();
-// Import handlers
-const sessions_1 = require("./handlers/sessions");
+const app_1 = require("./app");
+const firebase_1 = require("./config/firebase");
 const ai_1 = require("./handlers/ai");
 const gamification_1 = require("./handlers/gamification");
-const weeklySummary_1 = require("./handlers/weeklySummary");
 const leaderboards_1 = require("./handlers/leaderboards");
-// Express API
-const app = (0, express_1.default)();
-app.use((0, cors_1.default)({ origin: true }));
-app.use(express_1.default.json());
-// API Routes
-app.post('/api/sessions', sessions_1.handleCreateSession);
-// Export Express API as Cloud Function
-exports.api = functions.https.onRequest(app);
-// Firestore Triggers
+const weeklySummary_1 = require("./handlers/weeklySummary");
+exports.api = functions.https.onRequest(app_1.app);
 exports.onSessionCreate = functions.firestore
     .document('sessions/{sessionId}')
-    .onCreate(async (snap, context) => {
+    .onCreate(async (snap) => {
     const session = snap.data();
-    const { userId } = session;
-    // Update user stats
-    const userRef = admin.firestore().doc(`users/${userId}`);
-    const statsRef = admin.firestore().doc(`userStats/${userId}`);
-    await admin.firestore().runTransaction(async (transaction) => {
-        const userDoc = await transaction.get(userRef);
-        const statsDoc = await transaction.get(statsRef);
-        const currentXP = userDoc.data()?.xp || 0;
-        const currentStudyTime = userDoc.data()?.totalStudyTime || 0;
-        // Update user XP and study time
-        transaction.update(userRef, {
-            xp: currentXP + session.xpEarned,
-            totalStudyTime: currentStudyTime + (session.duration / 60),
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
-        // Update user stats
-        if (statsDoc.exists()) {
-            transaction.update(statsRef, {
-                totalSessions: admin.firestore.FieldValue.increment(1),
-                totalHours: admin.firestore.FieldValue.increment(session.duration / 3600),
-            });
-        }
-        else {
-            transaction.set(statsRef, {
-                userId,
-                totalSessions: 1,
-                totalHours: session.duration / 3600,
-                averageFocusScore: session.focusScore,
-                averageProductivityScore: session.productivityScore || 0,
-                topicDistribution: {},
-                studyHeatmap: {},
-                weeklyTrend: [],
-            });
-        }
-    });
-    // Check for badge awards
+    const userId = session.userId;
+    if (!userId) {
+        console.warn('Session created without userId', snap.id);
+        return;
+    }
+    const userRef = firebase_1.db.collection('users').doc(userId);
+    const userSnap = await userRef.get();
+    const userData = userSnap.data() || {};
     await (0, gamification_1.checkAndAwardBadges)(userId);
-    // Create activity feed item
-    await admin.firestore().collection('activities').add({
+    await firebase_1.db.collection('activities').add({
         userId,
-        userName: userDoc.data()?.displayName || 'User',
-        userPhoto: userDoc.data()?.photoURL || null,
+        userName: userData.displayName || 'User',
+        userPhoto: userData.photoURL || null,
         type: 'session_complete',
         sessionId: snap.id,
         topic: session.topic,
         duration: session.duration,
         xpEarned: session.xpEarned,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        score: session.score,
+        timestamp: firebase_1.admin.firestore.FieldValue.serverTimestamp(),
         reactions: {},
     });
-    // Generate AI summary (async, non-blocking)
     (0, ai_1.handleGenerateAISummary)(snap.id, userId, session).catch(console.error);
 });
-// Scheduled Functions
 exports.updateLeaderboardsDaily = functions.pubsub
     .schedule('every day 00:00')
     .timeZone('America/New_York')
@@ -128,16 +82,17 @@ exports.generateWeeklySummaries = functions.pubsub
     .onRun(async () => {
     await (0, weeklySummary_1.generateWeeklySummary)();
 });
-// Callable Functions
 exports.addFriend = functions.https.onCall(async (data, context) => {
     if (!context.auth) {
         throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
     }
     const userId = context.auth.uid;
     const { friendId } = data;
-    // Add friend to user's friends list
-    await admin.firestore().doc(`users/${userId}`).update({
-        friends: admin.firestore.FieldValue.arrayUnion(friendId),
+    await firebase_1.db
+        .collection('users')
+        .doc(userId)
+        .update({
+        friends: firebase_1.admin.firestore.FieldValue.arrayUnion(friendId),
     });
     return { success: true };
 });
@@ -147,8 +102,11 @@ exports.removeFriend = functions.https.onCall(async (data, context) => {
     }
     const userId = context.auth.uid;
     const { friendId } = data;
-    await admin.firestore().doc(`users/${userId}`).update({
-        friends: admin.firestore.FieldValue.arrayRemove(friendId),
+    await firebase_1.db
+        .collection('users')
+        .doc(userId)
+        .update({
+        friends: firebase_1.admin.firestore.FieldValue.arrayRemove(friendId),
     });
     return { success: true };
 });
