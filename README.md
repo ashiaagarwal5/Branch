@@ -1,10 +1,10 @@
-# DAN - Strava for Studying
+# Branch - Strava for Studying
 
 **Track, gamify, and share your focus.**
 
 ## Overview
 
-DAN is a gamified productivity tracker that measures and improves how people study — combining Strava's social model with AI insights and a browser extension for passive tracking.
+Branch is a gamified productivity tracker that measures and improves how people work.
 
 ## Team
 
