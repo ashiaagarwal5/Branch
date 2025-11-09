@@ -45,7 +45,7 @@ dan/
 1. Clone the repository
 ```bash
 git clone <repo-url>
-cd DAN
+cd Branch
 ```
 
 2. Install dependencies
