@@ -1,6 +1,6 @@
-# DAN Architecture (Full Workflow)
+# Branch Architecture (Full Workflow)
 
-This document outlines the end-to-end architecture for the DAN productivity platform. It expands the original MVP design to cover the full workflow: onboarding, extension integration, activity logging, ML pipelines, session scoring, social features, bets, task management with LLM, daily self-reports, leaderboards, monitoring, and privacy.
+This document outlines the end-to-end architecture for the Branch productivity platform. It expands the original MVP design to cover the full workflow: onboarding, extension integration, activity logging, ML pipelines, session scoring, social features, bets, task management with LLM, daily self-reports, leaderboards, monitoring, privacy, and adaptive personalization.
 
 ---
 
@@ -10,7 +10,7 @@ This document outlines the end-to-end architecture for the DAN productivity plat
 |----------------------|--------------------------------------------------------------------------------------------------|--------------|
 | Web Client           | Onboarding, dashboard, social feed, bets UI, task scheduling, privacy controls                  | Next.js 14, React, Tailwind, React Query |
 | Chrome Extension     | Live activity capture, classification requests, offline queue, privacy toggles                  | Chrome MV3, TypeScript |
-| Backend API          | Auth, ingestion, sessions, gamification, social, bets, tasks, notifications, exports            | Node.js/Express (Firebase Functions), Firestore, Firebase Auth |
+| Backend API          | Auth, ingestion, sessions, adaptive user modeling, gamification, social, bets, tasks, notifications, exports            | Node.js/Express (Firebase Functions), Firestore, Firebase Auth |
 | ML Services          | Activity classification, productivity scoring, LLM-based task splitting, image generation       | FastAPI (DistilBERT), Node workers, OpenAI APIs |
 | Data Processing      | Session aggregation, cron jobs, ML retraining, leaderboards, analytics                           | Firebase Functions, BullMQ/Bull Board, Redis, BigQuery |
 | Observability/Security | Monitoring, auditing, rate limiting, privacy enforcement                                      | Prometheus, Grafana, Sentry, ELK, Cloud KMS |
@@ -80,7 +80,7 @@ Core data stores:
   - `/admin`
 - Middleware stack:
   - CORS with dynamic origin allowlist (web app + extension).
-  - Auth middleware verifying Firebase ID token or DAN-issued OAuth token.
+  - Auth middleware verifying Firebase ID token or Branch-issued OAuth token.
   - Scope checks (extension tokens limited to logging APIs, web tokens full scope).
   - Rate limiting via Redis (per IP + per user).
   - Request validation (zod schemas) and sanitisation.
@@ -118,7 +118,7 @@ Core data stores:
 
 ### 3.1 Web Auth
 1. User signs up/logs in via Firebase Auth (email/password, Google OAuth, optional 2FA).
-2. Backend exchanges Firebase ID token for DAN access token (JWT) with 1 hour TTL, stored in secure HTTP-only cookie (`__Host-dan-token`).
+2. Backend exchanges Firebase ID token for Branch access token (JWT) with 1 hour TTL, stored in secure HTTP-only cookie (`__Host-branch-token`).
 3. Refresh token remains with Firebase; silent refresh using `/api/auth/refresh`.
 4. Tokens include scopes (e.g., `user.read`, `sessions.write`, `bets.manage`).
 
@@ -144,6 +144,8 @@ Core data stores:
 |-------------------------|---------|------------------|
 | `users/{uid}`           | Core profile, gamification state | xp, level, streak, privacy flags, balance, badges summary |
 | `userSettings/{uid}`    | Preferences | domain blacklist, sharing defaults, notification prefs |
+| `userModels/{uid}`      | Adaptive personalization coefficients | embeddings, clusterAssignments, modelVersion, updatedAt |
+| `userAdaptiveState/{uid}` | Live adaptive state & preferences | focusPreferences, modelFeatures, tags, lastSelfReportScore, notes |
 | `authTokens/{hash}`     | Extension refresh token metadata | hashed token, userId, deviceId, expiresAt |
 | `activityLogs/{doc}`    | Raw activity events | url, title, domain, startedAt, endedAt, interactionSeconds, classification, confidence (TTL 90 days) |
 | `sessions/{id}`         | Session aggregates | computed metrics, scores, tasks summary, badge triggers |
@@ -163,6 +165,7 @@ Core data stores:
 | `selfReports/{id}`      | Daily productivity label | score 0–100, mood, note, linkedSessionId |
 | `mlArtifacts/{id}`      | Model metadata | version, registryPath, metrics, deployedAt |
 | `privacyAudits/{id}`    | Audit logs | actor, action, timestamp, details |
+| `dataExports/{id}`      | Privacy export jobs | userId, status, channels, createdAt, completedAt |
 | `systemMetrics/{id}`    | Aggregated operational metrics | ingestionRate, failureCounts |
 
 Retention policies:
@@ -482,4 +485,4 @@ Environment secrets synced via CI/CD; feature flags managed via Firebase Remote 
 6. Determine long-term analytics strategy (BigQuery cost management, aggregation windows).
 7. Confirm monitoring stack (self-hosted Grafana vs managed) and integration with incident response tools.
 
-This architecture blueprint guides the implementation of the full DAN workflow and ensures scalability, privacy, and feature alignment across web, extension, backend, and ML services.
+This architecture blueprint guides the implementation of the full Branch workflow and ensures scalability, privacy, adaptive intelligence, and feature alignment across web, extension, backend, and ML services.

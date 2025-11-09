@@ -13,8 +13,8 @@
     "baseUrl": ".",
     "moduleResolution": "node",
     "paths": {
-      "@dan/shared": ["../shared/dist"],
-      "@dan/shared/*": ["../shared/dist/*"]
+      "@branch/shared": ["../shared/dist"],
+      "@branch/shared/*": ["../shared/dist/*"]
     }
   },
   "compileOnSave": true,

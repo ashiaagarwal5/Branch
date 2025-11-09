@@ -2,7 +2,7 @@
   "name": "dan-monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "DAN - Strava for Studying",
+  "description": "Branch - Strava for Studying",
   "workspaces": [
     "web",
     "extension",

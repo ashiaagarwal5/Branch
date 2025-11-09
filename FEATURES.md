@@ -1,4 +1,4 @@
-# DAN Features
+# Branch Features
 
 Complete feature list for the MVP (Minimum Viable Product).
 
@@ -328,7 +328,7 @@ Complete feature list for the MVP (Minimum Viable Product).
 
 ### Key UI Elements
 
-- Gradient text for brand (DAN)
+- Gradient text for brand (Branch)
 - Animated progress bars
 - Streak flame visualization
 - Badge showcase grids
@@ -474,7 +474,7 @@ Complete feature list for the MVP (Minimum Viable Product).
 
 ## 🎓 Educational Value
 
-DAN helps students:
+Branch helps students:
 - Build consistent study habits
 - Track progress objectively
 - Stay motivated through gamification

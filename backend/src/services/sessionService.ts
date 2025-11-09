@@ -1,5 +1,5 @@
 import { differenceInSeconds } from 'date-fns';
-import { calculateXP, calculateLevel } from '@dan/shared';
+import { calculateXP, calculateLevel } from '@branch/shared';
 import { admin, db } from '../config/firebase';
 import { nowTimestamp, toTimestamp } from '../utils/firestore';
 

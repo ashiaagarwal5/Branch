@@ -15,6 +15,49 @@ body {
   padding: 16px;
 }
 
+.auth-section {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.auth-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.link-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#setupCodeInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+#setupCodeInput:focus {
+  outline: none;
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.linked-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #4b5563;
+}
+
 .header {
   text-align: center;
   margin-bottom: 20px;
@@ -131,12 +174,12 @@ body {
 }
 
 .btn-secondary {
-  background: #f3f4f6;
+  background: #e5e7eb;
   color: #1f2937;
 }
 
 .btn-secondary:hover {
-  background: #e5e7eb;
+  background: #d1d5db;
 }
 
 .actions {

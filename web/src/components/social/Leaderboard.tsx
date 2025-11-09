@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { LeaderboardEntry } from '@dan/shared';
+import type { LeaderboardEntry } from '@branch/shared';
 
 interface LeaderboardProps {
   type: 'hours' | 'xp' | 'streak';

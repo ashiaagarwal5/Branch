@@ -1,6 +1,6 @@
 'use client';
 
-import { User, calculateLevel, getXPForNextLevel, getLevelProgress } from '@dan/shared';
+import { User, calculateLevel, getXPForNextLevel, getLevelProgress } from '@branch/shared';
 
 interface XPProgressProps {
   user: User;

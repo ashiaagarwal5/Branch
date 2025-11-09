@@ -1,6 +1,6 @@
-# DAN - Setup Guide
+# Branch - Setup Guide
 
-This guide will help you get the DAN productivity tracker up and running.
+This guide will help you get the Branch productivity tracker up and running.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ This guide will help you get the DAN productivity tracker up and running.
 ### 1. Clone and Install
 
 ```bash
-cd DAN
+cd Branch
 npm install
 npm run install:all
 ```
@@ -163,7 +163,7 @@ firebase deploy --only functions
 **Extension:**
 ```bash
 # View background script logs
-chrome://extensions/ → Click "service worker" under DAN extension
+chrome://extensions/ → Click "service worker" under Branch extension
 ```
 
 **Firebase Functions:**

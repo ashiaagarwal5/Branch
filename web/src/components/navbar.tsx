@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAuthContext } from '@/contexts/AuthContext';
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import toast from 'react-hot-toast';
 
 export function Navbar() {

@@ -1,7 +1,7 @@
 {
   "name": "@dan/backend",
   "version": "0.1.0",
-  "description": "DAN Backend - Firebase Cloud Functions",
+  "description": "Branch Backend - Firebase Cloud Functions",
   "private": true,
   "scripts": {
     "serve": "firebase emulators:start",
@@ -12,7 +12,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@dan/shared": "file:../shared",
+    "@branch/shared": "file:../shared",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "express": "^4.19.0",

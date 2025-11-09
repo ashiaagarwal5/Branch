@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { formatDuration } from '@dan/shared';
+import { formatDuration } from '@branch/shared';
 
 export default function CurrentSession() {
   const [sessionActive, setSessionActive] = useState(false);

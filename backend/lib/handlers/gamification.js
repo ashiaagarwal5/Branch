@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkAndAwardBadges = checkAndAwardBadges;
 const admin = __importStar(require("firebase-admin"));
-const shared_1 = require("@dan/shared");
+const shared_1 = require("@branch/shared");
 async function checkAndAwardBadges(userId) {
     try {
         const userDoc = await admin.firestore().doc(`users/${userId}`).get();

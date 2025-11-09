@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 
 export default function FocusTimer() {
   const [seconds, setSeconds] = useState(25 * 60);
@@ -23,7 +23,7 @@ export default function FocusTimer() {
         {mm}:{ss}
       </div>
       <div className="mt-4 flex gap-2">
-        <Button size="sm" variant="primary" onClick={() => setRunning((r) => !r)}>
+        <Button size="sm" variant="default" onClick={() => setRunning((r) => !r)}>
           {running ? 'Pause' : 'Start'}
         </Button>
         <Button size="sm" variant="ghost" onClick={() => setSeconds(25 * 60)}>

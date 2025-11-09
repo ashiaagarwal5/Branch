@@ -11,6 +11,13 @@ const morgan_1 = __importDefault(require("morgan"));
 const auth_1 = require("./routes/auth");
 const logs_1 = require("./routes/logs");
 const sessions_1 = require("./routes/sessions");
+const tasks_1 = require("./routes/tasks");
+const bets_1 = require("./routes/bets");
+const leaderboard_1 = require("./routes/leaderboard");
+const social_1 = require("./routes/social");
+const privacy_1 = require("./routes/privacy");
+const users_1 = require("./routes/users");
+const classify_1 = require("./routes/classify");
 const requestId_1 = require("./middleware/requestId");
 const errorHandler_1 = require("./middleware/errorHandler");
 const response_1 = require("./utils/response");
@@ -37,5 +44,12 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', auth_1.authRouter);
 app.use('/api/logs', logs_1.logsRouter);
 app.use('/api/sessions', sessions_1.sessionsRouter);
+app.use('/api/tasks', tasks_1.tasksRouter);
+app.use('/api/bets', bets_1.betsRouter);
+app.use('/api/leaderboard', leaderboard_1.leaderboardRouter);
+app.use('/api/social', social_1.socialRouter);
+app.use('/api/privacy', privacy_1.privacyRouter);
+app.use('/api/users', users_1.usersRouter);
+app.use('/api/classify', classify_1.classifyRouter);
 app.use(errorHandler_1.errorHandler);
 //# sourceMappingURL=app.js.map

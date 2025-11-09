@@ -1,4 +1,4 @@
-# 🚀 DAN Quick Start Guide
+# 🚀 Branch Quick Start Guide
 
 Your Firebase project **dann-91ae4** is now configured!
 
@@ -7,7 +7,7 @@ Your Firebase project **dann-91ae4** is now configured!
 ### 1. Install Dependencies
 
 ```bash
-cd /Users/dianhaoli/Documents/DAN
+cd /Users/dianhaoli/Documents/Branch
 
 # Install all packages
 npm install
@@ -67,10 +67,10 @@ npm run watch
 2. Go to `chrome://extensions/`
 3. Enable **Developer mode** (top right toggle)
 4. Click **Load unpacked**
-5. Navigate to `/Users/dianhaoli/Documents/DAN/extension/dist`
+5. Navigate to `/Users/dianhaoli/Documents/Branch/extension/dist`
 6. Select the folder
 
-The DAN extension icon should now appear in your toolbar!
+The Branch extension icon should now appear in your toolbar!
 
 ### 6. Test the App
 
@@ -199,7 +199,7 @@ Run through this checklist:
 
 ## 🎉 You're All Set!
 
-DAN is now running locally. Start studying and watch your productivity soar! 📚🚀
+Branch is now running locally. Start studying and watch your productivity soar! 📚🚀
 
 Need help? Check:
 - SETUP.md - Detailed setup guide

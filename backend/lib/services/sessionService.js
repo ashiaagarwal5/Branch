@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.computeSessionForRange = computeSessionForRange;
 const date_fns_1 = require("date-fns");
-const shared_1 = require("@dan/shared");
+const shared_1 = require("@branch/shared");
 const firebase_1 = require("../config/firebase");
 const firestore_1 = require("../utils/firestore");
 const SESSIONS_COLLECTION = 'sessions';

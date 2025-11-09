@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, ReactNode } from 'react';
-import { User } from '@dan/shared';
+import { User } from '@branch/shared';
 import { User as FirebaseUser } from 'firebase/auth';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -9,6 +9,7 @@ interface AuthContextType {
   user: User | null;
   firebaseUser: FirebaseUser | null;
   loading: boolean;
+  accessToken: string | null;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 }
