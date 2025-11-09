@@ -1,4 +1,4 @@
-# Branch - Strava for Studying
+# Branch
 
 **Track, gamify, and share your focus.**
 
